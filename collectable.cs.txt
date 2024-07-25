@@ -1,0 +1,29 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+public class Collectables : MonoBehaviour
+{
+    public int currentScore;
+    public int scoreToAdd;
+    public TextMeshProUGUI scoreText;
+    void Start()
+    {
+
+    }
+    void Update()
+    {
+
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+      if (other.CompareTag("Coins"))
+        {
+            currentScore += scoreToAdd;
+            Destroy(other.gameObject);
+            scoreText.text = currentScore.ToString();
+            soundManager.instance.coinssource.PlayOneShot(soundManager.instance.coinSound);
+            
+        }
+    }
+}

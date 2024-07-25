@@ -1,0 +1,104 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class LadderCheck : MonoBehaviour
+{
+    public List<Transform> ladderPosition = new List<Transform>();
+    public int currentladderposition;
+    public bool startingPos;
+    public bool endingPos;
+    public LadderCheck currentLadder;
+    public Transform exitPoint;
+    public List<Vector3> climbingposition = new List<Vector3>();
+    public List<Vector3> climbingRotation = new List<Vector3>();
+    // Start is called before the first frame update
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && startingPos)
+        {
+            PlayerControls.instance.isonladder = true;
+            //startingladderposition();
+            Getnextladderpoints();
+            PlayerControls.instance.currentLadder = this;
+        }
+        else if (other.CompareTag("Player") && endingPos)
+        {
+            PlayerControls.instance.Exitladder(exitPoint);
+        }
+    }
+    public void startingladderposition()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            PlayerControls.instance.climbingpoints.Add(ladderPosition[i]);
+
+        }
+        currentladderposition++;
+    }
+    public void Getnextladderpoints()
+    {
+        List<Transform> newClimbingPoints = new List<Transform>();
+        switch (currentladderposition)
+        {
+            case 0:
+                newClimbingPoints.Add(ladderPosition[0]);
+                newClimbingPoints.Add(ladderPosition[1]);
+                newClimbingPoints.Add(ladderPosition[2]);
+                newClimbingPoints.Add(ladderPosition[3]);
+                break;
+            case 1:
+                newClimbingPoints.Add(ladderPosition[2]);
+                newClimbingPoints.Add(ladderPosition[3]);
+                newClimbingPoints.Add(ladderPosition[4]);
+                newClimbingPoints.Add(ladderPosition[5]);
+                break;
+            case 2:
+                newClimbingPoints.Add(ladderPosition[4]);
+                newClimbingPoints.Add(ladderPosition[5]);
+                newClimbingPoints.Add(ladderPosition[6]);
+                newClimbingPoints.Add(ladderPosition[7]);
+                break;
+            case 3:
+                newClimbingPoints.Add(ladderPosition[6]);
+                newClimbingPoints.Add(ladderPosition[7]);
+                newClimbingPoints.Add(ladderPosition[8]);
+                newClimbingPoints.Add(ladderPosition[9]);
+                break;
+            case 4:
+                newClimbingPoints.Add(ladderPosition[8]);
+                newClimbingPoints.Add(ladderPosition[9]);
+                newClimbingPoints.Add(ladderPosition[10]);
+                newClimbingPoints.Add(ladderPosition[11]);
+                break;
+
+            case 5:
+                newClimbingPoints.Add(ladderPosition[10]);
+                newClimbingPoints.Add(ladderPosition[11]);
+                newClimbingPoints.Add(ladderPosition[12]);
+                newClimbingPoints.Add(ladderPosition[13]);
+                break;
+            case 6:
+                newClimbingPoints.Add(ladderPosition[12]);
+                newClimbingPoints.Add(ladderPosition[13]);
+                newClimbingPoints.Add(ladderPosition[14]);
+                newClimbingPoints.Add(ladderPosition[15]);
+                break;
+            case 7:
+                newClimbingPoints.Add(ladderPosition[14]);
+                newClimbingPoints.Add(ladderPosition[15]);
+                newClimbingPoints.Add(ladderPosition[16]);
+                newClimbingPoints.Add(ladderPosition[17]);
+                break;
+            case 8:
+                newClimbingPoints.Add(ladderPosition[16]);
+                newClimbingPoints.Add(ladderPosition[17]);
+                newClimbingPoints.Add(ladderPosition[18]);
+                newClimbingPoints.Add(ladderPosition[19]);
+                break;
+        }
+        currentladderposition++;
+        PlayerControls.instance.ChangePositionBasedOnladder(climbingposition[currentladderposition],climbingRotation[currentladderposition]);
+        PlayerControls.instance.climbingpoints = newClimbingPoints;
+    }
+}

@@ -1,0 +1,82 @@
+using UnityEngine;
+using UnityEngine.AI;
+public class EnemyAttack : MonoBehaviour
+{
+    public enum State { Idle, Walking, Punching, Dying }
+    public State currentState = State.Idle;
+
+    public float health = 100f;
+    private int playerHitCount = 0;
+    public int hitsToDie = 2;
+    
+    public Transform player;
+    public Transform npc;
+    public float attackRange = 2f;
+    public float speed = 2f;
+    private Animator animator;
+    public NavMeshAgent agent;
+    public Rigidbody rb;
+    void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
+
+    void Update()
+    {
+        if (currentState != State.Dying)
+        {
+           Patrol();
+        }
+    }
+
+    void Patrol()
+    {
+        
+        if(Vector3.Distance(transform.position,player.position)<=agent.stoppingDistance)
+        {
+            currentState = State.Idle;
+            agent.speed = 0;
+            agent.isStopped = true;
+            Attack();
+            animator.SetBool("Walk", false);
+            return;
+        }
+        
+        currentState = State.Walking;
+        agent.speed = 15;
+        agent.isStopped = false;
+        agent.SetDestination(player.position);
+        animator.SetBool("Walk",true);
+        animator.SetBool("Punch", false);
+
+        // Logic for patrolling
+    }
+
+    void Attack()
+    {
+        currentState = State.Punching;
+        transform.LookAt(player, Vector3.up);
+        animator.SetBool("Punch", true);
+        // Logic for attacking the target
+    }
+    public bool isDead;
+    public void TakeDamage()
+    {
+        if (isDead)
+            return;
+        playerHitCount++;
+        if (playerHitCount >= hitsToDie)
+        {
+            isDead = true;
+            health = 0;
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        currentState = State.Dying;
+        animator.SetTrigger("Die");
+        // Logic for enemy death
+    }
+}
